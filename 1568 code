@@ -1,1 +1,93 @@
-1568
+below is c++ code with explanation 
+
+
+class Solution {
+public:
+  int m, n;
+    vector<vector<int>> directions{{-1,0},{1,0},{0,-1},{0,1}};
+
+// neeche dfs bana diya hai 
+
+void DFS(vector<vector<int>>& grid, int i, int j, vector<vector<bool>>& visited) {
+        if(i < 0 || j < 0 || i >= m || j >= n || visited[i][j] || grid[i][j] == 0)
+            return;
+
+
+   visited[i][j]= true;// mark visited 
+   
+//   DFS(grid,  i+1 , j, vis );
+
+  // DFS(grid, i-1 , j, vis );
+   //DFS(grid, i , j+1,vis);
+    // DFS(grid, i , j-1,vis);
+     for(auto& d : directions) {
+        DFS(grid, i + d[0], j + d[1], visited);
+        }
+    }
+
+
+// num  of island count karega (vector or grid lekar nikal dega )
+int numberOfIslandsDFS(vector<vector<int>>& grid) {
+
+  vector<vector<bool>> visited(m, vector<bool>(n, false));  // <-- RESET HERE
+    int islands = 0;
+
+
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+            //dfs kab call laroge agar wo visited nhi hona chaiye 
+           // if (grid[i][j] == 1 && !vis[i][j]) { // land ke loye 1  
+            // ab dfs marege 4
+            // DFS(grid,i, j, vis);
+             if(grid[i][j] == 1 && !visited[i][j]){
+                    DFS(grid, i, j, visited);
+                    islands++;
+
+
+            }
+        }
+    }
+     return islands;
+
+}
+int minDays(vector<vector<int>>& grid){
+           m = grid.size();
+           n = grid[0].size();
+           //  m or n means kitne rows and kitne columns hai 
+
+               int islands = numberOfIslandsDFS(grid);
+
+         if(islands == 0 || islands > 1)// agar island 0  raha toh  min day bhi 0 
+            return 0;
+
+    
+            // we have only one island check of can disconnect in one day
+                  // check for 1 ans
+            for (int i = 0 ; i < m; i ++) {
+                for (int j = 0; j < n; j++) {
+                    if (grid[i][j] == 1) {
+                        grid[i][j] = 0; //visited 
+
+                        // ab dekhte hai num of island kitna hai 
+                     // islands = numberOfIslandsDFS(grid);
+                            if(numberOfIslandsDFS(grid) != 1)
+                        return 1;
+
+
+                          grid[i][j] = 1; //unvisited
+                    }
+                }
+            }
+
+                        
+                       
+
+                       
+                        // make it land again and now go to try next cell
+           
+     // sab kuch khatam hua ham bolege aur ek din me na tod paaye 2 din toh aaram se kar lege 
+     return 2;//It's always possible to break an island with 2 moves
+    
+        
+    }
+};
